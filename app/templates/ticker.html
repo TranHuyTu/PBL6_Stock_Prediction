@@ -36,7 +36,7 @@
 <body>
     <div class="container-fluid position-relative d-flex p-0">
         <!-- Spinner Start -->
-        <div id="spinner" class="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div id="spinner" class="show position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
             <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
@@ -57,7 +57,7 @@
                     </div>
                     <div class="ms-3">
                         <h6 class="mb-0">Welcome</h6>
-                        <span>Guest</span>
+                        <span class="login_status">Guest</span>
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
@@ -71,9 +71,9 @@
 
 
         <!-- Content Start -->
-        <div class="content">
+        <div class="content bg-white" style="background-image: url('https://res.cloudinary.com/dbaul3mwo/image/upload/v1700756907/learn_nodejs/R_bdaacd.jpg');">
             <!-- Navbar Start -->
-            <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
+            <nav class="navbar navbar-expand navbar-dark sticky-top px-4 py-0" style="background: black;opacity: 0.8;">
                 <a href="../" class="navbar-brand d-flex d-lg-none me-4">
                     <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
                 </a>
@@ -85,11 +85,12 @@
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <img class="rounded-circle me-lg-2" src="{% static 'image/user.png' %}" alt="" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">Guest</span>
+                            <span class="d-none d-lg-inline-flex login_status">Guest</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
                             <a href="/search" class="dropdown-item">Predict</a>
                             <a href="/ticker" class="dropdown-item">Ticker Info</a>
+                            <a href="/login" class="dropdown-item login_url mn-item">Login</a>
                         </div>
                     </div>
                 </div>
@@ -135,10 +136,10 @@
                 <div class="bg-secondary rounded-top p-4">
                     <div class="row">
                         <div class="col-12 col-sm-6 text-center text-sm-start">
-                            &copy; <a href="#">Kumar Laxmikant</a>, All Right Reserved. 
+                            Người phát triển : <a href="#">Trần Huy Tú, Nguyễn Trọng Nghĩa</a> 
                         </div>
                         <div class="col-12 col-sm-6 text-center text-sm-end">
-                            Designed By <a href="https://portfolio-website-azure-eta.vercel.app/">Kumar Laxmikant</a>
+                            Người hướng dẫn: <a href="#">Th.S Nguyễn Văn Nguyên</a>
                         </div>
                     </div>
                 </div>
@@ -162,6 +163,34 @@
     <script src="{% static 'lib/tempusdominus/js/moment.min.js' %}"></script>
     <script src="{% static 'lib/tempusdominus/js/moment-timezone.min.js' %}"></script>
     <script src="{% static 'lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+    <script>
+        window.addEventListener("load", function() {
+          if(sessionStorage.getItem("token")){
+            fetch("https://serverltmnc.onrender.com/login/decoded", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": sessionStorage.getItem("token")
+              },
+            }).then(response=>response.json())
+            .then((data) =>{
+              const elementLogin = document.querySelectorAll('.login_status');
+              const elementURL = document.querySelectorAll('.login_url');
+              elementLogin.forEach((item,index)=>{
+                item.innerHTML = `<a href="/profile" style="font-weight: 900;font-family: 'Roboto';">${data.user.name}</a>`
+              })
+              elementURL[0].innerHTML = `<a href="#" style="margin: 10px;" onclick="handleLogout()">Logout</a>`
+            })
+              .catch((error) => {
+                  console.error("Error:", error);
+              });
+          }
+        });
+        function handleLogout(){
+          sessionStorage.clear();
+          window.location.href = "/";
+        }
+      </script>
 
     <!-- Template Javascript -->
     <script src="{% static 'js/main.js' %}"></script>
