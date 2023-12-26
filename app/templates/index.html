@@ -80,8 +80,8 @@
                 <a href="#" class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
                 </a>
-                <form class="d-none d-md-flex ms-4">
-                    <input class="form-control bg-gray border-0" type="search" placeholder="Search" style="background: aliceblue;">
+                <form class="d-none d-md-flex ms-4" method="post" action="{% url 'search_ticker' %}">{% csrf_token %}
+                    <input name="search_query" class="form-control bg-gray border-0" type="search" placeholder="Search" style="background: aliceblue;">
                 </form>
                 <div class="navbar-nav align-items-center ms-auto">
                     <div class="nav-item dropdown">
@@ -217,6 +217,21 @@
           sessionStorage.clear();
           window.location.href = "/";
         }
+
+        document.addEventListener("DOMContentLoaded", function() {
+        // Kiểm tra xem 'token' có tồn tại trong sessionStorage hay không
+        var tokenExists = sessionStorage.getItem('token') !== null;
+
+        // Nếu 'token' tồn tại, thêm nó vào form
+        if (tokenExists) {
+            var searchForm = document.getElementById('searchForm');
+            var tokenInput = document.createElement('input');
+            tokenInput.type = 'hidden';
+            tokenInput.name = 'token';
+            tokenInput.value = sessionStorage.getItem('token');
+            searchForm.appendChild(tokenInput);
+        }
+    });
       </script>
 
     <!-- Template Javascript -->

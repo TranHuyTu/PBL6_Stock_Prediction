@@ -22,6 +22,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
     path('search/', search),
+    path('searchTicker/', searchTicker, name='search_ticker'),
+    path('infoDetail/', searchTicker, name='info_detail'),
     path('predict/<str:ticker_value>/<str:number_of_days>/', predict),
     path('ticker/', ticker),
     path('login/', login),
